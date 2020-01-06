@@ -1,24 +1,29 @@
 # Javascript Node CircleCI 2.0 configuration file
-#
-# Check https://circleci.com/docs/2.0/language-javascript/ for more details
-#
 version: 2
-jobs:
-  build:
+executors:
+  publisher:
     docker:
-      # specify the version you desire here
-      - image: circleci/node:7.10
-
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-      # - image: circleci/mongo:3.4.4
-
-    working_directory: ~/repo
-
+      - image: circleci/node:10
+jobs:
+  install:
+    executors: publisher
     steps:
       - checkout
+      - run:
+        name: install dependencies
+        command: 
+          npm install
+      # - image: circleci/mongo:3.4.4
+    working_directory: ~/repo
 
+  test_phase: 
+    executors: publisher
+    steps:
+      - run:
+        name: test project
+        # run tests!
+        command: 
+          npm run test
       # Download and cache dependencies
       - restore_cache:
           keys:
@@ -26,12 +31,41 @@ jobs:
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
 
-      - run: yarn install
+  build_image:
+    steps: 
+      - run:
+          name: build and tag the image
+          command: |
+              docker build -f Node/Dockerfile 
+              docker build -t htysn21/api:latest
+      - run:
+         name: publish image to docker hub
+         command: |
+             docker login -u "hugotysn21" -p
+             docker push htysn21/api:latest
 
-      - save_cache:
-          paths:
-            - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
 
-      # run tests!
-      - run: yarn test
+workflows:
+  version: 2
+  dev:
+    jobs:
+      - install:
+        filters:
+          branches:
+            only: dev
+      - test_phase:
+          requires:
+            - install
+          filters:
+            branches:
+              only: dev
+      - build_image:
+          - test_phase
+            filters:
+              branches:
+                only: dev
+
+
+
+
+
