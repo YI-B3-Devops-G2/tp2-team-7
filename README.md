@@ -1,3 +1,1 @@
-# TP2-Team_Lantillon_Youmi
-# TP2-Team_YOUMI_LANTILLON
 # TP2-Team_YOUMI_LANTILLON
