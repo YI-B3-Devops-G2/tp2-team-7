@@ -11,32 +11,37 @@ jobs:
     executor: publisher
     steps:
       - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+            - v1-dependencies-
       - run:
           name: install dependencies
           command: 
               npm install
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
 
   test_phase: 
     executor: publisher
     steps:
       - checkout
+      - restore_cache:
+          keys:
+            # Find a cache corresponding to this specific package-lock.json checksum
+            # when this file is changed, this key will fail
+            - v1-dependencies-{{ checksum "package.json" }}
+            # Find the most recently generated cache used from any branch
+            - v1-dependencies-
       - run:
           name: run test project
-          command: 
-              npm run test
-      - run:    
-          name: Creating Dummy Artifacts
-          command: |
-              echo "my artifact file" > /tmp/artifact-1;
-              mkdir /tmp/artifacts;
-              echo "my artifact files in a dir" > /tmp/artifacts/artifact-2;
+          command:
+            npm run test -- --json --outputFile=/tmp/output.json
 
       - store_artifacts:
-          path: /tmp/artifact-1
-          destination: artifact-file
-
-      - store_artifacts:
-          path: /tmp/artifacts    
+          path: /tmp/output.json
 
   build_image:
     executor: publisher
