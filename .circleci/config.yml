@@ -6,7 +6,7 @@ executors:
       - image: circleci/node:10
 jobs:
   install:
-    executors: publisher
+    executor: publisher
     steps:
       - checkout
       - run:
