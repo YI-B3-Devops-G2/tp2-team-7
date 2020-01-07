@@ -59,35 +59,35 @@ workflows:
       - install:
           filters:
             branches:
-              only: dev
-      - test_phase:
-          requires:
-            - install
-          filters:
-            branches:
-              only: dev
-      - build_image:
-          requires:
-            - test_phase
-          filters:
-            branches:
-              only: dev
-
-  prod:
-    jobs:
-      - install:
-          filters:
-            branches:
               only: master
       - test_phase:
           requires:
             - install
           filters:
             branches:
-              only: dev
+              only: master
       - build_image:
           requires:
             - test_phase
           filters:
             branches:
-              only: master            
+              only: master
+
+#  prod:
+#    jobs:
+#      - install:
+#          filters:
+#            tag:
+#              only: master
+#      - test_phase:
+#          requires:
+#            - install
+#          filters:
+#            branches:
+#              only: dev
+#      - build_image:
+#          requires:
+#            - test_phase
+#          filters:
+#            branches:
+#              only: master
