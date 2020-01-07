@@ -19,6 +19,7 @@ jobs:
   test_phase: 
     executor: publisher
     steps:
+      - checkout
       - run:
           name: run test project
           command: 
@@ -39,7 +40,9 @@ jobs:
 
   build_image:
     executor: publisher
-    steps: 
+    steps:
+      - checkout
+      - setup_remote_docker
       - run:
           name: build and tag the image
           command: |
