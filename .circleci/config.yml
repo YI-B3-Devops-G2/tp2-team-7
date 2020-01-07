@@ -1,9 +1,11 @@
 # Javascript Node CircleCI 2.0 configuration file
-version: 2
+version: 2.1
+
 executors:
   publisher:
     docker:
       - image: circleci/node:10
+
 jobs:
   install:
     executor: publisher
