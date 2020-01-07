@@ -10,28 +10,34 @@ jobs:
     steps:
       - checkout
       - run:
-        name: install dependencies
-        command: 
-          npm install
-      # - image: circleci/mongo:3.4.4
-    working_directory: ~/repo
+          name: install dependencies
+          command: 
+              npm install
 
   test_phase: 
-    executors: publisher
+    executor: publisher
+    working_directory: /tmp
     steps:
       - run:
-        name: test project
-        # run tests!
-        command: 
-          npm run test
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "package.json" }}
-            # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-
+          name: run test project
+          command: 
+              npm run test
+      - run:    
+          name: Creating Dummy Artifacts
+          command: |
+              echo "my artifact file" > /tmp/artifact-1;
+              mkdir /tmp/artifacts;
+              echo "my artifact files in a dir" > /tmp/artifacts/artifact-2;
+
+      - store_artifacts:
+          path: /tmp/artifact-1
+          destination: artifact-file
+
+      - store_artifacts:
+          path: /tmp/artifacts    
 
   build_image:
+    executor: publisher
     steps: 
       - run:
           name: build and tag the image
@@ -39,20 +45,19 @@ jobs:
               docker build -f Node/Dockerfile 
               docker build -t htysn21/api:latest
       - run:
-         name: publish image to docker hub
-         command: |
-             docker login -u "hugotysn21" -p
-             docker push htysn21/api:latest
-
+          name: publish image to docker hub
+          command: |
+              docker login -u "hugotysn21" -p
+              docker push htysn21/api:latest
 
 workflows:
   version: 2
   dev:
     jobs:
       - install:
-        filters:
-          branches:
-            only: dev
+          filters:
+            branches:
+              only: dev
       - test_phase:
           requires:
             - install
@@ -60,12 +65,27 @@ workflows:
             branches:
               only: dev
       - build_image:
-          - test_phase
-            filters:
-              branches:
-                only: dev
+          requires:
+            - test_phase
+          filters:
+            branches:
+              only: dev
 
-
-
-
-
+  prod:
+    jobs:
+      - install:
+          filters:
+            branches:
+              only: master
+      - test_phase:
+          requires:
+            - install
+          filters:
+            branches:
+              only: dev
+      - build_image:
+          requires:
+            - test_phase
+          filters:
+            branches:
+              only: master            
