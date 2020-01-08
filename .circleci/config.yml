@@ -51,7 +51,7 @@ jobs:
       - run:
           name: build and tag the image
           command: |
-              docker build -t api:latest Node/Dockerfile
+              docker build -t api:latest node/Dockerfile
       - run:
           name: publish image to docker hub
           command: |
