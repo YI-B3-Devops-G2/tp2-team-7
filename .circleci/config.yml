@@ -45,7 +45,6 @@ jobs:
 
   build_image:
     executor: publisher
-    context: ./
     steps:
       - checkout
       - setup_remote_docker # Ask circleci new Docker Engine to build outside of container
