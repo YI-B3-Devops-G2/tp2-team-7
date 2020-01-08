@@ -47,11 +47,11 @@ jobs:
     executor: publisher
     steps:
       - checkout
-      - setup_remote_docker
+      - setup_remote_docker # Ask circleci new Docker Engine to build outside of container
       - run:
           name: build and tag the image
           command: |
-              docker build -t api:latest node/Dockerfile
+              docker build -t api:latest ./node/Dockerfile
       - run:
           name: publish image to docker hub
           command: |
