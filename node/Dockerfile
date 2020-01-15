@@ -8,7 +8,7 @@ WORKDIR /home/api
 RUN chown -R node:node /home/api
 USER node
 #Install dependencies app
-COPY package.json /home/api/
+COPY package.json ./
 RUN npm install
 
 EXPOSE 3000
