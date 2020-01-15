@@ -53,7 +53,7 @@ jobs:
           command: ln ./node/Dockerfile ./Dockerfile
       - run:
           name: build and tag the image
-          command: docker build -t api:latest node/
+          command: docker build -t api:latest .
       - run:
           name: publish image to docker hub
           command: |
