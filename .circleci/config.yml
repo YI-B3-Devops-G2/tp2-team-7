@@ -58,7 +58,7 @@ jobs:
           name: publish image to docker hub
           command: |
               echo "$DOCKER_HUB_PASS" | docker login -u "htysn21" --password-stdin
-              docker push htysn21/api:latest
+              docker push api:latest
 
 workflows:
   version: 2
