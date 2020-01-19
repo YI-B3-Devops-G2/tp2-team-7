@@ -66,7 +66,7 @@ Améliorez la productivité, l'efficacité et le bonheur de votre équipe. Trouv
 - Ces étapes se caracterise comme ceci (vous pouvez vous réferer au fichier .circleci/config.yml) :
 	
 	<p align="center">
-  		<img src="pipeline.png" alt="Shema" width=600 height=350>
+  		<img src="./pipeline.png" alt="Shema" width=600 height=350>
 	</p>
 
 ## Installation - Déroulement
