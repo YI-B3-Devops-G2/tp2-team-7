@@ -53,7 +53,7 @@ jobs:
           command: ln ./node/Dockerfile ./Dockerfile
       - run:
           name: build and tag the image
-          command: docker build -t api:latest .
+          command: docker build -t htysn21/api:latest . --compress --force-rm --no-cache --pull
       - run:
           name: publish image to docker hub
           command: |
